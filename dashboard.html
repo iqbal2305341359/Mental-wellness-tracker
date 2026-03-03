@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Your Dashboard</h1>
+        <button onclick="logout()" class="logout-btn">Logout</button>
+
+        <h2>Record Your Mood</h2>
+        <form id="moodForm">
+            <select id="mood" required>
+                <option value="">Select Mood</option>
+                <option value="Happy">Happy</option>
+                <option value="Sad">Sad</option>
+                <option value="Anxious">Anxious</option>
+                <option value="Excited">Excited</option>
+                <option value="Calm">Calm</option>
+            </select>
+            <textarea id="note" placeholder="Write a short note..."></textarea>
+            <button type="submit">Save Mood</button>
+        </form>
+
+        <h2>Your Mood History</h2>
+        <canvas id="moodChart"></canvas>
+
+        <br>
+        <a href="profile.html">Update Profile</a>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
