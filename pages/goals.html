@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goals - Mental Wellness Tracker</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/footer.css">
+    <style>
+        .goal-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1.5px solid #e2e8f0;
+            transition: 0.3s;
+        }
+        .goal-card:hover { border-color: #667eea; }
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 10px;
+            transition: 0.5s;
+        }
+        .goal-actions { display: flex; gap: 8px; margin-top: 10px; }
+        .btn-complete {
+            padding: 6px 14px;
+            background: #c6f6d5;
+            color: #276749;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .btn-delete {
+            padding: 6px 14px;
+            background: #fed7d7;
+            color: #9b2c2c;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+        .badge-active { background: #bee3f8; color: #2b6cb0; }
+        .badge-done { background: #c6f6d5; color: #276749; }
+    </style>
+</head>
+<body onload="checkAuth(); loadGoals();">
+
+<header>
+    <div class="header-inner">
+        <div class="header-logo">
+            <h1>🧠 Mental Wellness Tracker</h1>
+        </div>
+        <nav>
+    <a href="dashboard.html" class="active">🏠 Dashboard</a>
+    <a href="mood.html">😊 Mood</a>
+    <a href="charts.html">📊 Charts</a>
+    <a href="calendar.html">📅 Calendar</a>
+    <a href="goals.html">🎯 Goals</a>
+    <a href="notes.html">📝 Notes</a>
+    <a href="chatbot.html">🤖 Chatbot</a>
+    <a href="reminders.html">🔔 Reminders</a>
+    <a href="admin.html" id="adminLink" style="display:none">⚙️ Admin</a>
+</nav>
+        <div class="header-user">
+            <span id="userName"></span>
+            <button class="btn-logout" onclick="logout()">Logout</button>
+        </div>
+    </div>
+</header>
+
+<main>
+    <div class="container">
+        <h1>🎯 My Wellness Goals</h1>
+
+        <div class="grid-2">
+            <div class="card">
+                <h2>Set New Goal</h2>
+                <div class="form-group">
+                    <label>Goal Title</label>
+                    <input type="text" id="goalTitle" placeholder="e.g. Meditate every day">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="goalDesc" rows="2" placeholder="Describe your goal..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Target Days</label>
+                    <input type="number" id="goalTarget" placeholder="e.g. 30" min="1" max="365">
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="goalCategory">
+                        <option value="Mindfulness">Mindfulness</option>
+                        <option value="Exercise">Exercise</option>
+                        <option value="Sleep">Sleep</option>
+                        <option value="Nutrition">Nutrition</option>
+                        <option value="Social">Social</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <button class="btn" style="width:100%" onclick="addGoal()">🎯 Add Goal</button>
+                <div class="message" id="goalMsg"></div>
+            </div>
+
+            <div class="card">
+                <h2>Goal Stats</h2>
+                <div style="display:flex;flex-direction:column;gap:15px">
+                    <div style="display:flex;justify-content:space-between;padding:15px;background:#f0f4f8;border-radius:10px">
+                        <span>Total Goals</span>
+                        <strong id="totalGoals" style="color:#667eea">0</strong>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;padding:15px;background:#f0f4f8;border-radius:10px">
+                        <span>Active Goals</span>
+                        <strong id="activeGoals" style="color:#667eea">0</strong>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;padding:15px;background:#f0f4f8;border-radius:10px">
+                        <span>Completed Goals</span>
+                        <strong id="completedGoals" style="color:#48bb78">0</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>My Goals 📋</h2>
+            <div id="goalsList">Loading...</div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <div class="footer-inner">
+        <div class="footer-left">
+            <p>🧠 Mental Wellness Tracker</p>
+            <span>Track your mood, improve your life</span>
+        </div>
+        <div class="footer-right">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="goals.html">Goals</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2026 Mental Wellness Tracker | Developed by Sadman Shakib Apurbo & Muammar Shahriar</p>
+    </div>
+</footer>
+
+<script src="../js/auth.js"></script>
+<script src="../js/goals.js"></script>
+</body>
+</html>

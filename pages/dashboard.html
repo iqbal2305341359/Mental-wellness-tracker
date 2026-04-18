@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Mental Wellness Tracker</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/footer.css">
+</head>
+<body onload="checkAuth(); loadDashboard();">
+
+<header>
+    <div class="header-inner">
+        <div class="header-logo">
+            <h1>🧠 Mental Wellness Tracker</h1>
+        </div>
+        <nav>
+    <a href="dashboard.html" class="active">🏠 Dashboard</a>
+    <a href="mood.html">😊 Mood</a>
+    <a href="charts.html">📊 Charts</a>
+    <a href="calendar.html">📅 Calendar</a>
+    <a href="goals.html">🎯 Goals</a>
+    <a href="notes.html">📝 Notes</a>
+    <a href="chatbot.html">🤖 Chatbot</a>
+    <a href="reminders.html">🔔 Reminders</a>
+    <a href="admin.html" id="adminLink" style="display:none">⚙️ Admin</a>
+</nav>
+        <div class="header-user">
+            <span id="userName"></span>
+            <button class="btn-logout" onclick="logout()">Logout</button>
+        </div>
+    </div>
+</header>
+
+<main>
+    <div class="container">
+        <h1>Welcome Back! 👋</h1>
+
+        <div class="grid-4">
+            <div class="card" style="text-align:center">
+                <div style="font-size:30px">😊</div>
+                <h3>Today's Mood</h3>
+                <p id="todayMood" style="font-size:24px;font-weight:700;color:#667eea">-</p>
+            </div>
+            <div class="card" style="text-align:center">
+                <div style="font-size:30px">🔥</div>
+                <h3>Current Streak</h3>
+                <p id="streak" style="font-size:24px;font-weight:700;color:#667eea">0 days</p>
+            </div>
+            <div class="card" style="text-align:center">
+                <div style="font-size:30px">📊</div>
+                <h3>Weekly Average</h3>
+                <p id="weeklyAvg" style="font-size:24px;font-weight:700;color:#667eea">-</p>
+            </div>
+            <div class="card" style="text-align:center">
+                <div style="font-size:30px">📝</div>
+                <h3>Total Entries</h3>
+                <p id="totalEntries" style="font-size:24px;font-weight:700;color:#667eea">0</p>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="card">
+                <h2>Quick Mood Entry ⚡</h2>
+                <p style="margin-bottom:15px;color:#718096">How are you feeling right now?</p>
+                <div id="moodBtns" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:15px"></div>
+                <p id="selectedMood" style="margin-bottom:10px;font-weight:600;color:#667eea"></p>
+                <textarea id="quickNote" placeholder="Add a note (optional)..." rows="2" style="margin-bottom:10px"></textarea>
+                <button class="btn" onclick="quickMoodEntry()">Save Mood</button>
+                <div class="message" id="moodMsg"></div>
+            </div>
+
+            <div class="card">
+                <h2>Recent Mood History 📋</h2>
+                <div id="recentHistory">Loading...</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Weekly Mood Summary 📈</h2>
+            <canvas id="weeklyChart" height="80"></canvas>
+        </div>
+
+        <div class="grid-2">
+            <div class="card">
+                <h2>Motivational Quote 💭</h2>
+                <p id="quote" style="font-style:italic;color:#4a5568;line-height:1.8">Loading...</p>
+            </div>
+            <div class="card">
+                <h2>Quick Links 🔗</h2>
+                <div style="display:flex;flex-direction:column;gap:10px">
+                    <a href="charts.html" class="btn" style="text-align:center;text-decoration:none">📊 View Charts</a>
+                    <a href="goals.html" class="btn" style="text-align:center;text-decoration:none">🎯 My Goals</a>
+                    <a href="reminders.html" class="btn" style="text-align:center;text-decoration:none">🔔 Set Reminder</a>
+                    <a href="chatbot.html" class="btn" style="text-align:center;text-decoration:none">🤖 Chat with Bot</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <div class="footer-inner">
+        <div class="footer-left">
+            <p>🧠 Mental Wellness Tracker</p>
+            <span>Track your mood, improve your life</span>
+        </div>
+        <div class="footer-right">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="mood.html">Mood</a>
+            <a href="charts.html">Charts</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2026 Mental Wellness Tracker | Developed by Sadman Shakib Apurbo & Muammar Shahriar</p>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/dashboard.js"></script>
+</body>
+</html>

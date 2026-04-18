@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reminders - Mental Wellness Tracker</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/footer.css">
+    <style>
+        .reminder-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #e2e8f0;
+            transition: 0.3s;
+        }
+        .reminder-item:hover { background: #f7fafc; }
+        .reminder-time {
+            font-size: 24px;
+            font-weight: 700;
+            color: #667eea;
+        }
+        .reminder-date { font-size: 13px; color: #718096; }
+        .badge-active {
+            background: #c6f6d5;
+            color: #276749;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .btn-delete-reminder {
+            background: #fed7d7;
+            color: #9b2c2c;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        @keyframes popupIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .badge-done {
+            background: #e2e8f0;
+            color: #718096;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .btn-done-reminder {
+            background: #c6f6d5;
+            color: #276749;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        } 
+    </style>
+</head>
+<body onload="checkAuth(); loadReminders(); startReminderChecker();">
+
+<header>
+    <div class="header-inner">
+        <div class="header-logo">
+            <h1>🧠 Mental Wellness Tracker</h1>
+        </div>
+        <nav>
+    <a href="dashboard.html" class="active">🏠 Dashboard</a>
+    <a href="mood.html">😊 Mood</a>
+    <a href="charts.html">📊 Charts</a>
+    <a href="calendar.html">📅 Calendar</a>
+    <a href="goals.html">🎯 Goals</a>
+    <a href="notes.html">📝 Notes</a>
+    <a href="chatbot.html">🤖 Chatbot</a>
+    <a href="reminders.html">🔔 Reminders</a>
+    <a href="admin.html" id="adminLink" style="display:none">⚙️ Admin</a>
+</nav>
+        <div class="header-user">
+            <span id="userName"></span>
+            <button class="btn-logout" onclick="logout()">Logout</button>
+        </div>
+    </div>
+</header>
+
+<main>
+    <div class="container">
+        <!-- Alarm Popup -->
+<div id="alarmPopup" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:9999;align-items:center;justify-content:center;">
+    <div style="background:white;border-radius:20px;padding:40px;text-align:center;max-width:400px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.3);animation:popupIn 0.3s ease">
+        <div style="font-size:60px;margin-bottom:15px">🔔</div>
+        <h2 style="color:#667eea;margin-bottom:10px">Reminder Alert!</h2>
+        <p style="color:#718096;margin-bottom:5px">Time to log your mood!</p>
+        <div style="font-size:32px;font-weight:700;color:#2d3748;margin:15px 0" id="alarmTime"></div>
+        <div style="font-size:14px;color:#a0aec0;margin-bottom:25px">📅 <span id="alarmDate"></span></div>
+        <div style="display:flex;gap:15px;justify-content:center">
+            <button onclick="snoozeAlarm(currentReminderId)" style="padding:12px 25px;background:#f6ad55;color:white;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer">😴 Snooze 5 min</button>
+            <button onclick="dismissAlarm(currentReminderId)" style="padding:12px 25px;background:#667eea;color:white;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer">✅ Dismiss</button>
+        </div>
+    </div>
+</div>
+        <h1>🔔 Reminders</h1>
+
+        <div class="grid-2">
+            <div class="card">
+                <h2>Set New Reminder</h2>
+                <div class="form-group">
+                    <label>Reminder Time</label>
+                    <input type="time" id="reminderTime">
+                </div>
+                <div class="form-group">
+                    <label>Reminder Date</label>
+                    <input type="date" id="reminderDate">
+                </div>
+                <button class="btn" style="width:100%" onclick="addReminder()">🔔 Set Reminder</button>
+                <div class="message" id="reminderMsg"></div>
+            </div>
+
+            <div class="card">
+                <h2>Reminder Stats</h2>
+                <div style="display:flex;flex-direction:column;gap:15px">
+                    <div style="display:flex;justify-content:space-between;padding:15px;background:#f0f4f8;border-radius:10px">
+                        <span>Total Reminders</span>
+                        <strong id="totalReminders" style="color:#667eea">0</strong>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;padding:15px;background:#f0f4f8;border-radius:10px">
+                        <span>Active Reminders</span>
+                        <strong id="activeReminders" style="color:#48bb78">0</strong>
+                    </div>
+                </div>
+                <div style="margin-top:20px;padding:15px;background:#f0f4f8;border-radius:10px">
+                    <p style="font-size:13px;color:#4a5568">💡 <strong>Tip:</strong> Set a daily reminder to log your mood consistently and build a healthy habit!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>My Reminders 📋</h2>
+            <div id="remindersList">Loading...</div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <div class="footer-inner">
+        <div class="footer-left">
+            <p>🧠 Mental Wellness Tracker</p>
+            <span>Track your mood, improve your life</span>
+        </div>
+        <div class="footer-right">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="reminders.html">Reminders</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2026 Mental Wellness Tracker | Developed by Sadman Shakib Apurbo & Muammar Shahriar</p>
+    </div>
+</footer>
+
+<script src="../js/auth.js"></script>
+<script src="../js/reminders.js"></script>
+</body>
+</html>
